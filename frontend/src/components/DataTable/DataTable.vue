@@ -1,6 +1,5 @@
 <template>
   <div class="data-table">
-
     <div class="table-controls">
       <input
         v-model="searchQuery"
@@ -10,9 +9,8 @@
 
       <select v-model="selectedFilter">
         <option value="">All Columns</option>
-
         <option
-          v-for="column in columns.filter(column => column.filterable)"
+          v-for="column in filterableColumns"
           :key="column.key"
           :value="column.key"
         >
@@ -24,56 +22,42 @@
     <table>
       <thead>
         <tr>
-          <th
-            v-for="column in columns"
-            :key="column.key"
-          >
+          <th v-for="column in columns" :key="column.key">
             {{ column.label }}
           </th>
-
-          <th>Actions</th>
+          <th v-if="$slots.actions">Actions</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr
-          v-for="row in filteredData"
-          :key="row.id"
-        >
-          <td
-            v-for="column in columns"
-            :key="column.key"
-          >
+        <tr v-for="row in filteredData" :key="row.id">
+          <td v-for="column in columns" :key="column.key">
             {{ row[column.key] }}
           </td>
 
-          <td>
-            <button @click="emit('edit', row)">
-              Edit
-            </button>
+          <td v-if="$slots.actions">
+            <slot name="actions" :row="row" />
+          </td>
+        </tr>
 
-            <button @click="emit('delete', row)">
-              Delete
-            </button>
+        <tr v-if="filteredData.length === 0">
+          <td :colspan="columns.length + ($slots.actions ? 1 : 0)">
+            No results found
           </td>
         </tr>
       </tbody>
     </table>
-
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 
-const emit = defineEmits(['edit', 'delete'])
-
 const props = defineProps({
   columns: {
     type: Array,
     required: true
   },
-
   data: {
     type: Array,
     required: true
@@ -83,22 +67,22 @@ const props = defineProps({
 const searchQuery = ref('')
 const selectedFilter = ref('')
 
+const filterableColumns = computed(() =>
+  props.columns.filter(column => column.filterable)
+)
+
 const filteredData = computed(() => {
-  if (!searchQuery.value) {
-    return props.data
-  }
+  const query = searchQuery.value.trim().toLowerCase()
+
+  if (!query) return props.data
 
   return props.data.filter(row => {
-    if (selectedFilter.value) {
-      return String(row[selectedFilter.value])
-        .toLowerCase()
-        .includes(searchQuery.value.toLowerCase())
-    }
+    const values = selectedFilter.value
+      ? [row[selectedFilter.value]]
+      : Object.values(row)
 
-    return Object.values(row).some(value =>
-      String(value)
-        .toLowerCase()
-        .includes(searchQuery.value.toLowerCase())
+    return values.some(value =>
+      String(value ?? '').toLowerCase().includes(query)
     )
   })
 })

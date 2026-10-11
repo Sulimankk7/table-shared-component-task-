@@ -6,66 +6,55 @@ import {
   remove
 } from '../services/data.service.js'
 
-export const getAllController = (req, res) => {
-  const data = getAll(req.params.resource)
+const notFound = (res) =>
+  res.status(404).json({ message: 'Item not found' })
 
-  res.json(data)
+// Body must be a non-empty JSON object
+const hasBody = (body) =>
+  body && Object.keys(body).length > 0
+
+export const getAllController = (req, res) => {
+  res.json(getAll(req.params.resource))
 }
 
 export const getByIdController = (req, res) => {
-  const id = Number(req.params.id)
+  const item = getById(req.params.resource, Number(req.params.id))
 
-  const item = getById(req.params.resource, id)
-
-  if (!item) {
-    return res.status(404).json({
-      message: 'Item not found'
-    })
-  }
+  if (!item) return notFound(res)
 
   res.json(item)
 }
 
 export const createController = (req, res) => {
-  const item = create(
-    req.params.resource,
-    req.body
-  )
+  if (!hasBody(req.body)) {
+    return res.status(400).json({ message: 'Request body is required' })
+  }
+
+  const item = create(req.params.resource, req.body)
 
   res.status(201).json(item)
 }
 
 export const updateController = (req, res) => {
-  const id = Number(req.params.id)
+  if (!hasBody(req.body)) {
+    return res.status(400).json({ message: 'Request body is required' })
+  }
 
   const item = update(
     req.params.resource,
-    id,
+    Number(req.params.id),
     req.body
   )
 
-  if (!item) {
-    return res.status(404).json({
-      message: 'Item not found'
-    })
-  }
+  if (!item) return notFound(res)
 
   res.json(item)
 }
 
 export const deleteController = (req, res) => {
-  const id = Number(req.params.id)
+  const deleted = remove(req.params.resource, Number(req.params.id))
 
-  const deleted = remove(
-    req.params.resource,
-    id
-  )
-
-  if (!deleted) {
-    return res.status(404).json({
-      message: 'Item not found'
-    })
-  }
+  if (!deleted) return notFound(res)
 
   res.status(204).send()
 }

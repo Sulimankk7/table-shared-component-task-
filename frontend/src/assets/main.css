@@ -139,3 +139,124 @@ tbody tr:hover {
 tbody tr:last-child td {
   border-bottom: none;
 }
+
+/* Global Buttons */
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 9px 16px;
+
+  border: 1px solid #2563eb;
+  border-radius: 8px;
+
+  background: #2563eb;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Form Inputs */
+
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+/* Form Layout */
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+
+  margin: 20px 0;
+  padding: 24px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+form input,
+form select,
+form textarea {
+  flex: 1;
+  min-width: 180px;
+  padding: 11px 13px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #1f2937;
+  font-size: 14px;
+  outline: none;
+
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Cancel Buttons */
+
+button[type="button"] {
+  background: #ffffff;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+button[type="button"]:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+/* Responsive Forms */
+
+@media (max-width: 640px) {
+  form {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 18px;
+  }
+
+  form input,
+  form select,
+  form textarea,
+  form button {
+    width: 100%;
+    min-width: 0;
+  }
+}

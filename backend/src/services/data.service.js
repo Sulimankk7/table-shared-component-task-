@@ -40,9 +40,14 @@ export const getById = (resource, id) => {
 export const create = (resource, itemData) => {
   const data = readData(resource)
 
+  // next id = highest existing id + 1
+  const nextId = data.length
+    ? Math.max(...data.map(item => item.id)) + 1
+    : 1
+
   const newItem = {
-    id: Date.now(),
-    ...itemData
+    ...itemData,
+    id: nextId
   }
 
   data.push(newItem)
@@ -61,9 +66,11 @@ export const update = (resource, id, itemData) => {
     return null
   }
 
+  // id is last so the client can't change it
   data[index] = {
     ...data[index],
-    ...itemData
+    ...itemData,
+    id
   }
 
   writeData(resource, data)
