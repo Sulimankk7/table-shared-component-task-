@@ -1,10 +1,3 @@
-import {
-  getAll,
-  getById,
-  create,
-  update,
-  remove
-} from '../services/data.service.js'
 
 const notFound = (res) =>
   res.status(404).json({ message: 'Item not found' })
@@ -13,48 +6,84 @@ const notFound = (res) =>
 const hasBody = (body) =>
   body && Object.keys(body).length > 0
 
-export const getAllController = (req, res) => {
-  res.json(getAll(req.params.resource))
-}
+export const createDataController = (dataManager) => ({
+  getAllController: async (req, res, next) => {
+    try {
+      const items = await dataManager.getAll(req.params.resource)
+      res.json(items)
+    } catch (error) {
+      next(error)
+    }
+  },
 
-export const getByIdController = (req, res) => {
-  const item = getById(req.params.resource, Number(req.params.id))
+  getByIdController: async (req, res, next) => {
+    try {
+      const item = await dataManager.getById(
+        req.params.resource,
+        Number(req.params.id)
+      )
 
-  if (!item) return notFound(res)
+      if (!item) return notFound(res)
 
-  res.json(item)
-}
+      res.json(item)
+    } catch (error) {
+      next(error)
+    }
+  },
 
-export const createController = (req, res) => {
-  if (!hasBody(req.body)) {
-    return res.status(400).json({ message: 'Request body is required' })
-  }
+  createController: async (req, res, next) => {
+    try {
+      if (!hasBody(req.body)) {
+        return res.status(400).json({
+          message: 'Request body is required',
+        })
+      }
 
-  const item = create(req.params.resource, req.body)
+      const item = await dataManager.create(
+        req.params.resource,
+        req.body
+      )
 
-  res.status(201).json(item)
-}
+      res.status(201).json(item)
+    } catch (error) {
+      next(error)
+    }
+  },
 
-export const updateController = (req, res) => {
-  if (!hasBody(req.body)) {
-    return res.status(400).json({ message: 'Request body is required' })
-  }
+  updateController: async (req, res, next) => {
+    try {
+      if (!hasBody(req.body)) {
+        return res.status(400).json({
+          message: 'Request body is required',
+        })
+      }
 
-  const item = update(
-    req.params.resource,
-    Number(req.params.id),
-    req.body
-  )
+      const item = await dataManager.update(
+        req.params.resource,
+        Number(req.params.id),
+        req.body
+      )
 
-  if (!item) return notFound(res)
+      if (!item) return notFound(res)
 
-  res.json(item)
-}
+      res.json(item)
+    } catch (error) {
+      next(error)
+    }
+  },
 
-export const deleteController = (req, res) => {
-  const deleted = remove(req.params.resource, Number(req.params.id))
+  deleteController: async (req, res, next) => {
+    try {
+      const deleted = await dataManager.remove(
+        req.params.resource,
+        Number(req.params.id)
+      )
 
-  if (!deleted) return notFound(res)
+      if (!deleted) return notFound(res)
 
-  res.status(204).send()
-}
+      res.status(204).send()
+    } catch (error) {
+      next(error)
+    }
+  },
+})

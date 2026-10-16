@@ -1,95 +1,57 @@
-import fs from 'fs'
-import path from 'path'
-import { fileURLToPath } from 'url'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const REQUIRED_METHODS = [
+  'findAll',
+  'findById',
+  'create',
+  'update',
+  'delete',
+];
 
-const dataDirectory = path.join(__dirname, '../../data')
-
-const getDataPath = (resource) => {
-  return path.join(dataDirectory, `${resource}.json`)
-}
-
-const readData = (resource) => {
-  const dataPath = getDataPath(resource)
-  const data = fs.readFileSync(dataPath, 'utf-8')
-
-  return JSON.parse(data)
-}
-
-const writeData = (resource, data) => {
-  const dataPath = getDataPath(resource)
-
-  fs.writeFileSync(
-    dataPath,
-    JSON.stringify(data, null, 2)
-  )
-}
-
-export const getAll = (resource) => {
-  return readData(resource)
-}
-
-export const getById = (resource, id) => {
-  const data = readData(resource)
-
-  return data.find(item => item.id === id)
-}
-
-export const create = (resource, itemData) => {
-  const data = readData(resource)
-
-  // next id = highest existing id + 1
-  const nextId = data.length
-    ? Math.max(...data.map(item => item.id)) + 1
-    : 1
-
-  const newItem = {
-    ...itemData,
-    id: nextId
+export class DataManager {
+  constructor(repositoryFactory) {
+    this.repositoryFactory = repositoryFactory;
   }
 
-  data.push(newItem)
+  getRepository(resource) {
+    const repository = this.repositoryFactory.getRepository(resource);
 
-  writeData(resource, data)
+    if (!repository) {
+      throw new Error(`Unsupported resource: ${resource}`);
+    }
 
-  return newItem
-}
+    for (const method of REQUIRED_METHODS) {
+      if (typeof repository[method] !== 'function') {
+        throw new Error(
+          `Repository for "${resource}" must implement "${method}"`
+        );
+      }
+    }
 
-export const update = (resource, id, itemData) => {
-  const data = readData(resource)
-
-  const index = data.findIndex(item => item.id === id)
-
-  if (index === -1) {
-    return null
+    return repository;
   }
 
-  // id is last so the client can't change it
-  data[index] = {
-    ...data[index],
-    ...itemData,
-    id
+  async getAll(resource) {
+    const repository = this.getRepository(resource);
+    return repository.findAll();
   }
 
-  writeData(resource, data)
-
-  return data[index]
-}
-
-export const remove = (resource, id) => {
-  const data = readData(resource)
-
-  const index = data.findIndex(item => item.id === id)
-
-  if (index === -1) {
-    return false
+  async getById(resource, id) {
+    const repository = this.getRepository(resource);
+    return repository.findById(id);
   }
 
-  data.splice(index, 1)
+  async create(resource, itemData) {
+    const repository = this.getRepository(resource);
+    return repository.create(itemData);
+  }
 
-  writeData(resource, data)
+  async update(resource, id, itemData) {
+    const repository = this.getRepository(resource);
+    return repository.update(id, itemData);
+  }
 
-  return true
+  async remove(resource, id) {
+    const repository = this.getRepository(resource);
+    return repository.delete(id);
+  }
 }

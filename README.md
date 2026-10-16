@@ -15,27 +15,37 @@ The goal is to create a reusable table that can display different types of data,
 - **Services:** Separate services for users and products organize data operations and keep API calls out of the page components.
 - **CSS:** Used only to improve the visual appearance, including buttons, forms, colors, spacing, and responsive layouts.
 
+
 ## Backend
 
-The backend uses Node.js and Express.
+The backend uses Node.js, Express, and PostgreSQL.
 
-- **Router:** Directs incoming requests to the correct endpoint.
-- **Controller:** Handles requests and coordinates the response.
-- **Service:** Contains the logic for data operations.
-- **JSON Files:** Store the project data without requiring a database.
+- **Routes:** Define API endpoints and direct requests to controllers.
+- **Controllers:** Handle HTTP requests, validate basic request requirements, and return responses.
+- **DataManager:** Coordinates data operations and selects the appropriate repository through the repository factory.
+- **RepositoryFactory:** Provides the repository associated with each supported resource.
+- **Repositories:** Handle database queries and CRUD operations using PostgreSQL.
+- **Database Configuration:** Creates the PostgreSQL connection pool using environment variables.
+- **Dependency Injection:** Dependencies are passed between layers instead of being created inside each layer.
+
+## Database
+
+- PostgreSQL is the primary source of truth.
+- The `users` and `products` tables store application data.
+- Database credentials are configured through the backend `.env` file.
+- The `.env` file must not be committed to version control.
 
 ## Main Principles
 
-- **DRY:** Avoids repeating table and API request logic.
-- **Single Responsibility:** Each part has a clear responsibility.
-- **List Abstraction:** The table displays different lists without depending on a specific data type.
-- **Reusability:** The same table can be used across different pages.
+- **DRY:** Reuse common logic and avoid unnecessary duplication.
+- **SOLID:** Separate responsibilities and keep components focused.
+- **Repository Pattern:** Separate database access from application logic.
+- **Dependency Injection:** Pass dependencies to the components that need them.
+- **Factory Pattern:** Centralize the selection of repositories.
+- **List Abstraction:** The shared table displays different datasets through configurable columns and data.
 
 ## Main Benefits
 
 - Reusable and configurable table.
 - Clear separation between frontend and backend responsibilities.
 - Easier maintenance and future improvements.
-
-
-
