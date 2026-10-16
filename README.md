@@ -13,12 +13,14 @@ The project has two versions:
 
 ## Frontend
 
-- **Shared DataTable:** A reusable component that displays data based on the columns and data passed to it.
-- **Dynamic Columns:** Each page can define its own columns.
-- **Search and Filtering:** Users can search through the data and filter by specific columns.
-- **Actions:** A Boolean property controls whether the Edit and Delete buttons are shown or hidden.
-- **Services:** Separate services for users and products organize data operations and keep API calls out of the page components.
-- **CSS:** Used to improve buttons, forms, colors, spacing, and responsive layouts.
+- **Shared DataTable:** A reusable component that displays different types of data using configurable columns and data.
+- **Dynamic Columns:** Each page defines its own columns.
+- **Search and Filtering:** Users can search across all columns or select a specific column to search.
+- **Sorting:** Users can sort table data by a selected column in ascending or descending order using the sorting menu.
+- **Dynamic Sorting:** Supports alphabetical sorting for text and numerical sorting for values such as age, price, and stock.
+- **Actions:** A Boolean property controls whether the Edit and Delete buttons are displayed.
+- **Services:** Separate services for users and products organize API calls.
+- **CSS:** Shared styling keeps buttons, forms, tables, and sorting controls consistent and responsive.
 
 ## Backend
 
