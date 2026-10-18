@@ -12,7 +12,7 @@
 import { ref, onMounted } from 'vue'
 
 import DataTable from '../components/DataTable/DataTable.vue'
-import { getProducts } from '../services/products.service.js'
+import { productsService } from '../services/products.service.js'
 
 const columns = [
   { key: 'name', label: 'Product', filterable: true },
@@ -26,7 +26,7 @@ const error = ref('')
 
 onMounted(async () => {
   try {
-    products.value = await getProducts()
+    products.value = await productsService.getAll()
   } catch (e) {
     error.value = e.message || 'Could not load products'
   }

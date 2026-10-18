@@ -1,11 +1,4 @@
-import { getAll, create, update, remove } from './api.js'
 
-const RESOURCE = 'products'
+import { createResourceService } from './createResourceService.js'
 
-export const getProducts = () => getAll(RESOURCE)
-
-export const createProduct = (data) => create(RESOURCE, data)
-
-export const updateProduct = (id, data) => update(RESOURCE, id, data)
-
-export const deleteProduct = (id) => remove(RESOURCE, id)
+export const productsService = createResourceService('products')
