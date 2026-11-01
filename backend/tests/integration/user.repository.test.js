@@ -66,16 +66,36 @@ describe('UserRepository PostgreSQL Integration Tests', () => {
   })
 
   
-it('should delete the created user', async () => {
-  const deleted = await repository.delete(createdUserId)
+  it('should delete the created user', async () => {
+    const deleted = await repository.delete(createdUserId)
 
-  expect(deleted).toBe(true)
+    expect(deleted).toBe(true)
 
-  const user = await repository.findById(createdUserId)
+    const user = await repository.findById(createdUserId)
 
-  expect(user).toBeNull()
+    expect(user).toBeNull()
 
-  createdUserId = undefined
+    createdUserId = undefined
+  })
+
+
+  it('should return false when deleting a non-existing user', async () => {
+    const result = await repository.delete(-1)
+
+    expect(result).toBe(false)
+  })
+
+
+  it('should return null when updating a non-existing user', async () => {
+  const result = await repository.update(-1, {
+    name: 'Ahmad',
+    email: 'ahmad@test.com',
+    age: 23,
+  })
+
+  expect(result).toBeNull()
 })
+
+
 
 })

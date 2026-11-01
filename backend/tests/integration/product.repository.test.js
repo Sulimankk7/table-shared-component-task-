@@ -91,4 +91,21 @@ describe('ProductRepository PostgreSQL Integration Tests', () => {
 
     createdProductId = undefined
   })
+
+  it('should return false when deleting a non-existing product', async () => {
+  const result = await repository.delete(-1)
+
+  expect(result).toBe(false)
+})
+
+it('should return null when updating a non-existing product', async () => {
+  const result = await repository.update(-1, {
+    name: 'Test Product',
+    price: 10,
+    category: 'Testing',
+    stock: 5,
+  })
+
+  expect(result).toBeNull()
+})
 })

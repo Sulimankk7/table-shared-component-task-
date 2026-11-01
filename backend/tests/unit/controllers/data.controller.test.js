@@ -170,6 +170,19 @@ describe('Data Controller', () => {
       expect(dataManager.update).not.toHaveBeenCalled()
       expect(next).not.toHaveBeenCalled()
     })
+
+    
+    it('should pass errors to next', async () => {
+      const { dataManager, controller, req, res, next } = createMocks()
+      const error = new Error('Database error')
+
+      dataManager.update.mockRejectedValue(error)
+
+      await controller.updateController(req, res, next)
+
+      expect(next).toHaveBeenCalledWith(error)
+    })
+
   })
 
   // deleteController
@@ -196,5 +209,18 @@ describe('Data Controller', () => {
       expect(res.json).toHaveBeenCalledWith({ message: 'Item not found' })
       expect(next).not.toHaveBeenCalled()
     })
+
+    it('should pass errors to next', async () => {
+      const { dataManager, controller, req, res, next } = createMocks()
+      const error = new Error('Database error')
+
+      dataManager.remove.mockRejectedValue(error)
+
+      await controller.deleteController(req, res, next)
+
+      expect(next).toHaveBeenCalledWith(error)
+    })
+
+
   })
 })

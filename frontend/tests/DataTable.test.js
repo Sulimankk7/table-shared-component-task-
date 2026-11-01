@@ -9,7 +9,7 @@ describe('DataTable.vue', () => {
     { key: 'age', label: 'Age', filterable: true },
   ]
 
-  const data = [
+  const data = [  
     { id: 1, name: 'Suliman', age: 21 },
     { id: 2, name: 'Ahmad', age: 23 },
   ]
