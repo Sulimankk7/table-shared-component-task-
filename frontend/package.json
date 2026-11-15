@@ -20,6 +20,7 @@
     "@vitest/coverage-v8": "^5.0.5",
     "@vue/test-utils": "^2.5.1",
     "jsdom": "^30.1.3",
+    "universal-backend-testing-framework": "file:../../../Universal Backend Testing Framework",
     "vite": "^8.2.2",
     "vite-plugin-vue-devtools": "^8.2.1",
     "vitest": "^5.0.5"

@@ -4,6 +4,11 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import { UniversalReporter, writeHtmlReport } from 'universal-backend-testing-framework'
+
+const universalReporter = new UniversalReporter({
+  report: (results, reportOptions) => writeHtmlReport(results, reportOptions),
+})
 
 export default defineConfig({
   plugins: [
@@ -19,6 +24,7 @@ test: {
   environment: 'jsdom',
   include: ['tests/**/*.test.js'],
   clearMocks: true,
+  reporters: ['default', universalReporter],
 
   coverage: {
     reporter: ['text', 'html'],
