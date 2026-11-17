@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "test": "vitest"
+    "test": "vitest",
+    "refresh:ubtf": "npm uninstall --no-save --no-audit universal-backend-testing-framework && npm install --no-save --install-links=false --no-audit --no-fund \"file:../../../Universal Backend Testing Framework\""
   },
   "dependencies": {
     "cors": "^2.8.5",

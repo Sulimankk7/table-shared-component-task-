@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "refresh:ubtf": "npm uninstall --no-save --no-audit universal-backend-testing-framework && npm install --no-save --install-links=false --no-audit --no-fund \"file:../../../Universal Backend Testing Framework\""
   },
   "dependencies": {
     "vue": "^3.5.42",

@@ -7,7 +7,11 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import { UniversalReporter, writeHtmlReport } from 'universal-backend-testing-framework'
 
 const universalReporter = new UniversalReporter({
-  report: (results, reportOptions) => writeHtmlReport(results, reportOptions),
+  projectName: 'Shared Table Frontend',
+  report: (results, reportOptions) => writeHtmlReport(results, {
+    ...reportOptions,
+    outputPath: process.env.UBTF_HTML_REPORT_PATH || 'reports/test-report.html',
+  }),
 })
 
 export default defineConfig({
